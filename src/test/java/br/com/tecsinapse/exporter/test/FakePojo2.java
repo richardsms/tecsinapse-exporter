@@ -6,7 +6,7 @@
  */
 package br.com.tecsinapse.exporter.test;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import br.com.tecsinapse.exporter.annotation.TableCellMapping;
 import br.com.tecsinapse.exporter.converter.LocalDateTableCellConverter;

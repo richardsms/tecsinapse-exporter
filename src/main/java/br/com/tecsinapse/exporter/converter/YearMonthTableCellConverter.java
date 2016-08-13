@@ -6,15 +6,14 @@
  */
 package br.com.tecsinapse.exporter.converter;
 
-import org.joda.time.YearMonth;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 
 import com.google.common.base.Strings;
 
 public class YearMonthTableCellConverter implements TableCellConverter<YearMonth> {
 
-    private static final DateTimeFormatter YYYY_MM = DateTimeFormat.forPattern("yyyyMM");
+    private static final DateTimeFormatter YYYY_MM = DateTimeFormatter.ofPattern("yyyyMM");
 
     @Override
     public YearMonth apply(String input) {

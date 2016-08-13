@@ -8,6 +8,11 @@ package br.com.tecsinapse.exporter.util;
 
 import static br.com.tecsinapse.exporter.util.Constants.LOCAL_DATE_BIGBANG;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +27,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 
 import br.com.tecsinapse.exporter.EmptyTableCell;
 import br.com.tecsinapse.exporter.ExporterFormatter;
@@ -187,20 +189,20 @@ public class WorkbookUtil {
         return false;
     }
 
-    private double toExcelDate(Date date) {
-        return DateUtil.getExcelDate(date);
+    private double toExcelDate(Instant instant) {
+        return DateUtil.getExcelDate(Date.from(instant));
     }
 
-    private Date toDate(LocalDateTime localDateTime) {
-        return localDateTime.toDate();
+    private Instant toDate(LocalDateTime localDateTime) {
+        return localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 
-    private Date toDate(LocalDate localDate) {
-        return localDate.toDate();
+    private Instant toDate(LocalDate localDate) {
+        return localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
     }
 
-    private Date toDate(LocalTime localTime) {
-        return LOCAL_DATE_BIGBANG.toDateTime(localTime).toDate();
+    private Instant toDate(LocalTime localTime) {
+        return LOCAL_DATE_BIGBANG.atTime(localTime).atZone(ZoneId.systemDefault()).toInstant();
     }
 
 }

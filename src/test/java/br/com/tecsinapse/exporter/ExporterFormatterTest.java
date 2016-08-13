@@ -9,9 +9,9 @@ package br.com.tecsinapse.exporter;
 
 import java.util.Locale;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -38,10 +38,6 @@ public class ExporterFormatterTest {
                                       Number number, String nExpected) {
 
         Locale.setDefault(locale);
-        Assert.assertNotNull(formatter.getLocalDateTimeFormat());
-        Assert.assertNotNull(formatter.getLocalDateFormat());
-        Assert.assertNotNull(formatter.getLocalTimeFormat());
-        Assert.assertNotNull(formatter.getDecimalFormater());
 
         Assert.assertEquals(formatter.formatLocalDateTime(ldt), ldtExpected);
         Assert.assertEquals(formatter.formatLocalDate(ld), ldExpected);

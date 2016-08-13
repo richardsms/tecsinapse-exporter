@@ -8,7 +8,7 @@ package br.com.tecsinapse.exporter.test;
 
 import java.util.Objects;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import br.com.tecsinapse.exporter.annotation.FixedLengthColumn;
 import br.com.tecsinapse.exporter.annotation.LineFixedLengthFile;

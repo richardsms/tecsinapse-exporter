@@ -6,15 +6,17 @@
  */
 package br.com.tecsinapse.exporter;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Locale;
 
 import org.apache.poi.ss.util.DateFormatConverter;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
 
 import br.com.tecsinapse.exporter.util.Constants;
 
@@ -23,60 +25,78 @@ public class ExporterFormatter {
     public static final ExporterFormatter PT_BR = new ExporterFormatter(Constants.LOCALE_PT_BR);
     public static final ExporterFormatter DEFAULT = new ExporterFormatter(Locale.ENGLISH);
 
-    private final String localDateTimeFormat;
-    private final String localDateFormat;
-    private final String localTimeFormat;
+    private final DateTimeFormatter localDateTimeFormat;
+    private final DateTimeFormatter localDateFormat;
+    private final DateTimeFormatter localTimeFormat;
     private final DecimalFormat decimalFormat;
     private final DecimalFormat integerFormat;
     private final DecimalFormat currencyFormat;
+    private final String cellDateTimeFormat;
+    private final String cellDateFormat;
+    private final String cellTimeFormat;
+    private final String cellCurrencyFormat;
+    private final String cellDecimalFormat;
+    private final String cellIntegerFormat;
     private final Locale locale;
-
-    public ExporterFormatter(Locale locale) {
-        this.locale = locale;
-        this.localDateTimeFormat = DateTimeFormat.patternForStyle("MM", locale);
-        this.localDateFormat = DateTimeFormat.patternForStyle("M-", locale);
-        this.localTimeFormat = DateTimeFormat.patternForStyle("-S", locale);
-        this.decimalFormat = (DecimalFormat) DecimalFormat.getInstance(locale);
-        this.integerFormat = (DecimalFormat) DecimalFormat.getIntegerInstance(locale);
-        this.currencyFormat = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
-    }
 
     public ExporterFormatter(String localDateTimeFormat, String localDateFormat, String localTimeFormat, String decimalFormat, String integerFormat, String currencyFormat) {
         this(localDateTimeFormat, localDateFormat, localTimeFormat, decimalFormat, integerFormat, currencyFormat, Locale.getDefault());
     }
 
+    public ExporterFormatter(Locale locale) {
+        this.locale = locale;
+        this.localDateTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM).withLocale(locale);
+        this.localDateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(locale);
+        this.localTimeFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale);
+        this.decimalFormat = (DecimalFormat) DecimalFormat.getInstance(locale);
+        this.integerFormat = (DecimalFormat) DecimalFormat.getIntegerInstance(locale);
+        this.currencyFormat = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
+        this.cellDateTimeFormat = DateFormatConverter.getJavaDateTimePattern(DateFormat.MEDIUM, locale);
+        this.cellDateFormat = DateFormatConverter.getJavaDateTimePattern(DateFormat.MEDIUM, locale);
+        this.cellTimeFormat = DateFormatConverter.getJavaDateTimePattern(DateFormat.SHORT, locale);
+        this.cellCurrencyFormat = DateFormatConverter.getPrefixForLocale(locale) + currencyFormat.toLocalizedPattern();
+        this.cellDecimalFormat = DateFormatConverter.getPrefixForLocale(locale) + decimalFormat.toLocalizedPattern();
+        this.cellIntegerFormat = DateFormatConverter.getPrefixForLocale(locale) + integerFormat.toLocalizedPattern();
+    }
+
     public ExporterFormatter(String localDateTimeFormat, String localDateFormat, String localTimeFormat, String decimalFormat, String integerFormat, String currencyFormat, Locale locale) {
         this.locale = locale;
-        this.localDateTimeFormat = localDateTimeFormat;
-        this.localDateFormat = localDateFormat;
-        this.localTimeFormat = localTimeFormat;
+        this.localDateTimeFormat = DateTimeFormatter.ofPattern(localDateTimeFormat, locale);
+        this.localDateFormat = DateTimeFormatter.ofPattern(localDateFormat, locale);
+        this.localTimeFormat = DateTimeFormatter.ofPattern(localTimeFormat, locale);
         this.decimalFormat = new DecimalFormat(decimalFormat, DecimalFormatSymbols.getInstance(locale));
         this.integerFormat = new DecimalFormat(integerFormat, DecimalFormatSymbols.getInstance(locale));
         this.currencyFormat = new DecimalFormat(currencyFormat, DecimalFormatSymbols.getInstance(locale));
+        this.cellDateTimeFormat = DateFormatConverter.convert(locale, localDateTimeFormat);
+        this.cellDateFormat = DateFormatConverter.convert(locale, localDateFormat);
+        this.cellTimeFormat = DateFormatConverter.convert(locale, localTimeFormat);
+        this.cellCurrencyFormat = DateFormatConverter.getPrefixForLocale(locale) + this.currencyFormat.toLocalizedPattern();
+        this.cellDecimalFormat = DateFormatConverter.getPrefixForLocale(locale) + this.decimalFormat.toLocalizedPattern();
+        this.cellIntegerFormat = DateFormatConverter.getPrefixForLocale(locale) + this.integerFormat.toLocalizedPattern();
     }
 
-    public String getLocalDateTimeFormat() {
+    public DateTimeFormatter getLocalDateTimeFormat() {
         return localDateTimeFormat;
     }
 
-    public String getLocalDateFormat() {
+    public DateTimeFormatter getLocalDateFormat() {
         return localDateFormat;
     }
 
-    public String getLocalTimeFormat() {
+    public DateTimeFormatter getLocalTimeFormat() {
         return localTimeFormat;
     }
 
-    public String getDecimalFormater() {
-        return decimalFormat.toPattern();
+    public DecimalFormat getDecimalFormat() {
+        return decimalFormat;
     }
 
-    public String getIntegerFormat() {
-        return integerFormat.toPattern();
+    public DecimalFormat getIntegerFormat() {
+        return integerFormat;
     }
 
-    public String getCurrencyFormat() {
-        return currencyFormat.toPattern();
+    public DecimalFormat getCurrencyFormat() {
+        return currencyFormat;
     }
 
     public Locale getLocale() {
@@ -84,15 +104,15 @@ public class ExporterFormatter {
     }
 
     public String formatLocalDate(LocalDate localDate) {
-        return localDate.toString(localDateFormat);
+        return localDate.format(localDateFormat);
     }
 
     public String formatLocalTime(LocalTime localTime) {
-        return localTime.toString(localTimeFormat);
+        return localTime.format(localTimeFormat);
     }
 
     public String formatLocalDateTime(LocalDateTime localDateTime) {
-        return localDateTime.toString(localDateTimeFormat);
+        return localDateTime.format(localDateTimeFormat);
     }
 
     public String formatNumber(Number number) {
@@ -126,34 +146,23 @@ public class ExporterFormatter {
     }
 
     public String getStringFormatByType(Object o, boolean isCurrency) {
-        String pattern = getStringByType(o, isCurrency);
-        if (pattern == null) {
-            return null;
-        }
-        if (o instanceof Number) {
-            return pattern;
-        }
-        return DateFormatConverter.convert(locale, pattern);
-    }
-
-    private String getStringByType(Object o, boolean isCurrency) {
         if (o instanceof LocalDateTime) {
-            return localDateTimeFormat;
+            return cellDateTimeFormat;
         }
         if (o instanceof LocalDate) {
-            return localDateFormat;
+            return cellDateFormat;
         }
         if (o instanceof LocalTime) {
-            return localTimeFormat;
+            return cellTimeFormat;
         }
         if (o instanceof Integer || o instanceof Long) {
-            return integerFormat.toPattern();
+            return cellIntegerFormat;
         }
         if (o instanceof Number && isCurrency) {
-            return currencyFormat.toPattern();
+            return cellCurrencyFormat;
         }
         if (o instanceof Number) {
-            return decimalFormat.toPattern();
+            return cellDecimalFormat;
         }
         return null;
     }
