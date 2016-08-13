@@ -22,6 +22,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,9 +41,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.reflections.ReflectionUtils;
 
 import com.google.common.base.Function;
@@ -254,7 +255,7 @@ public class ImporterUtils {
                 return Boolean.valueOf(cellValue.getBooleanValue());
             case Cell.CELL_TYPE_NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    LocalDateTime localDateTime = LocalDateTime.fromDateFields(cell.getDateCellValue());
+                    LocalDateTime localDateTime = LocalDateTime.ofInstant(cell.getDateCellValue().toInstant(), ZoneId.systemDefault());
                     return localDateTime;
                 }
                 BigDecimal bd = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(DECIMAL_PRECISION, BigDecimal.ROUND_HALF_UP);
@@ -320,10 +321,10 @@ public class ImporterUtils {
         LocalTime localTime = localDateTime.toLocalTime();
         LocalDate localDate = localDateTime.toLocalDate();
         if (LOCAL_DATE_BIGBANG.compareTo(localDate) == 0) {
-            return localTime.toString(Constants.LOCAL_TIME_ISO_FORMAT);
+            return localTime.format(Constants.LOCAL_TIME_ISO_FORMAT);
         }
 
-        return localDateTime.toString(Constants.LOCAL_DATE_TIME_ISO_FORMAT);
+        return localDateTime.format(Constants.LOCAL_DATE_TIME_ISO_FORMAT);
     }
 
 

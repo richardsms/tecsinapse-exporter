@@ -6,7 +6,7 @@
  */
 package br.com.tecsinapse.exporter.converter;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.testng.annotations.DataProvider;
 
 public class LocalDateTableCellConverterTest extends AbstractTableCellConverter<LocalDate, LocalDateTableCellConverter> {

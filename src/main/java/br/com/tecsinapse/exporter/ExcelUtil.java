@@ -160,7 +160,7 @@ public class ExcelUtil {
      * @param t table
      * @param file file
      * @param charsetName charset
-     * @param separator
+     * @param separator separator
      * @deprecated use methods from {@link br.com.tecsinapse.exporter.util.ExporterUtil}
      * @return File
      * @throws IOException IOException

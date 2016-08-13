@@ -6,7 +6,7 @@
  */
 package br.com.tecsinapse.exporter.converter;
 
-import org.joda.time.LocalTime;
+import java.time.LocalTime;
 
 import com.google.common.base.Strings;
 

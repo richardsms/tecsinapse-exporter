@@ -7,7 +7,7 @@
 
 package br.com.tecsinapse.exporter.util;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.testng.annotations.Test;
 
 import br.com.tecsinapse.exporter.Table;

@@ -13,7 +13,7 @@
  */
 package br.com.tecsinapse.exporter.converter;
 
-import org.joda.time.LocalTime;
+import java.time.LocalTime;
 import org.testng.annotations.DataProvider;
 
 public class LocalTimeTableCellConverterTest extends AbstractTableCellConverter<LocalTime, LocalTimeTableCellConverter> {

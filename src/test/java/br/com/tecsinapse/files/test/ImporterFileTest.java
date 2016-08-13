@@ -19,9 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -202,11 +201,11 @@ public class ImporterFileTest {
 
     public static final class LocalDateConverter implements TableCellConverter<LocalDate> {
 
-        private static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern(DD_MM_YYYY);
+        private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DD_MM_YYYY);
 
         @Override
         public LocalDate apply(String input) {
-            return FORMATTER.parseLocalDate(input);
+            return LocalDate.parse(input, FORMATTER);
         }
 
     }

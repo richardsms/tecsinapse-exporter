@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -173,7 +174,7 @@ public class ExporterFileTest {
                 table.addNewRow();
                 table.add(bean.cidade);
                 table.add(bean.estado);
-                table.add(bean.data == null ? "" : bean.data.toString(dataPattern));// exportar em formato data
+                table.add(bean.data == null ? "" : bean.data.format(DateTimeFormatter.ofPattern(dataPattern)));// exportar em formato data
                 table.add("");
                 table.add(bean.inteiro);
                 table.add(bean.decimal);
@@ -214,7 +215,7 @@ public class ExporterFileTest {
                     final FileBean bean = beans.get(i - 1);
                     assertEquals(row.get(0), bean.cidade, fileName);
                     assertEquals(row.get(1), bean.estado, fileName);
-                    assertEquals(row.get(2), bean.data == null ? "" : bean.data.toString(dataPattern), fileName);
+                    assertEquals(row.get(2), bean.data == null ? "" : bean.data.format(DateTimeFormatter.ofPattern(dataPattern)), fileName);
                     assertEquals(row.get(3), "", fileName);
                     assertEquals(row.get(4), decimalFormat.format(bean.inteiro), fileName);
                     assertEquals(row.get(5), decimalFormat.format(bean.decimal), fileName);

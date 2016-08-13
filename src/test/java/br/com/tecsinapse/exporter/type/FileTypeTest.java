@@ -9,11 +9,11 @@ package br.com.tecsinapse.exporter.type;
 import static br.com.tecsinapse.exporter.util.Constants.DATE_TIME_FILE_NAME;
 
 import java.io.FileInputStream;
+import java.time.LocalDateTime;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.joda.time.LocalDateTime;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -81,7 +81,7 @@ public class FileTypeTest {
     @Test(dataProvider = "fileTypeExtensionDs")
     public void testFileTypeWithExtensionAndLocalTimeNow(String filename, String filenameExpected, FileType fileType) {
         if (filenameExpected != null) {
-            filenameExpected = String.format(filenameExpected, "_" + LocalDateTime.now().toString(DATE_TIME_FILE_NAME));
+            filenameExpected = String.format(filenameExpected, "_" + LocalDateTime.now().format(DATE_TIME_FILE_NAME));
         }
         Assert.assertEquals(fileType.toFilenameWithExtensionAndLocalTimeNow(filename, DATE_TIME_FILE_NAME), filenameExpected);
     }

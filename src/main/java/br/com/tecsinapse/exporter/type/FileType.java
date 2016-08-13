@@ -8,11 +8,12 @@ package br.com.tecsinapse.exporter.type;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.joda.time.LocalDateTime;
 
 public enum FileType {
 
@@ -80,12 +81,12 @@ public enum FileType {
         return filename + extension;
     }
 
-    public String toFilenameWithExtensionAndLocalTimeNow(String filename, String localDateTimeFormat) {
+    public String toFilenameWithExtensionAndLocalTimeNow(String filename, DateTimeFormatter localDateTimeFormat) {
         String filenameWithExtension = toFilenameWithExtension(filename);
         if (filenameWithExtension == null || localDateTimeFormat == null) {
             return filenameWithExtension;
         }
-        String now = LocalDateTime.now().toString(localDateTimeFormat);
+        String now = LocalDateTime.now().format(localDateTimeFormat);
         String filenameOnly = filenameWithExtension.length() >= extension.length() ? filenameWithExtension.substring(0, filenameWithExtension.length() - extension.length()) : filenameWithExtension;
         return  filenameOnly + "_" +  now  + extension;
     }
